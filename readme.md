@@ -24,5 +24,7 @@
 3. Navigate to this folder and run `npm test`.
 
 #### Deployed Link
+https://fast-savannah-47369.herokuapp.com/ 
 
 #### Framework of choice
+React
