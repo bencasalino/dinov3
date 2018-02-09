@@ -11,7 +11,7 @@ export default function InputForm({ handleSubmit, listings, expand, expanded, pr
         <textarea id="application-text" rows="8" cols="100" name="inputdata" />
         <input id="submit" type="submit" value="Submit" />
       </form>
-      <p id="message">&nbsp;</p>
+      <p id="message"> &nbsp;</p>
     </main>
   );
 }
