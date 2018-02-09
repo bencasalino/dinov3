@@ -3,15 +3,22 @@ import "./App.css";
 import  Header  from "./Header";
 import { JobDetails } from "./JobDetails";
 import  Footer  from "./Footer";
-import { InputForm } from "./InputForm";
+import InputForm from "./InputForm";
 import { Preview } from "./Preview";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      innerText: "",
       data: {}
     };
+  }
+
+  onInputChange = (event) => {
+    console.log(event.target.value);
+    event.preventDefault()
+    this.setState({innerText: event.target.value}); 
   }
 
   componentDidMount() {
@@ -28,13 +35,11 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-      <head>
-        <title> heyyyoooo</title>
-        </head>
         <Header />
         <main>
           <JobDetails jobData={this.state.data} />
-          <InputForm />
+          <InputForm showPreview={(event) => this.onInputChange(event)} currentValue={this.state.currentValue} submitHandler=/>
+
           <Preview />
         </main>
         <Footer />
