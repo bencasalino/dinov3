@@ -1,56 +1,79 @@
 import React, { Component } from "react";
 import "./App.css";
-import  Header  from "./Header";
-import { JobDetails } from "./JobDetails";
-import  Footer  from "./Footer";
-import InputForm from "./InputForm";
-import { Preview } from "./Preview";
+import Header from "./components/Header";
+import InputForm from "./components/InputForm";
+import Footer from "./components/Footer";
+import Listings from "./components/Listings";
+import Preview from "./components/Preview";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      innerText: "",
-      data: {}
-    };
-  }
-
-  onInputChange = (event) => {
-    console.log(event.target.value);
-    event.preventDefault()
-    this.setState({innerText: event.target.value}); 
-  }
+  state = {
+    listings: [],
+    expanded: false,
+    previewText: ""
+  };
 
   componentDidMount() {
-    fetch("./listing.json")
-      .then(response => response.json())
-      .then(response => {
-        this.setState({
-          data: response
-        });
-      })
-      .catch(err => console.log(err));
+    this.getListings();
   }
+
+  handleSubmit = event => {
+    event.preventDefault();
+    const listings = this.state.listings;
+    const preview = this.state.previewText;
+    const data = new FormData(event.target);
+
+    listings.push({
+      description: data.get("inputdata")
+    });
+    this.setState({ listings });
+    this.setState({ previewText: data.get("inputdata") });
+  };
+
+  getListings = () => {
+    fetch("./listing.json")
+      .then(resp => resp.json())
+      .then(listings => {
+        if (Array.isArray(listings)) {
+          this.setState({ listings });
+        } else {
+          this.setState({ error: "This data is not valid!!" });
+        }
+      });
+  };
+  expand = event => {
+    event.preventDefault();
+    const expand = this.state.expanded;
+    if (expand === false) {
+      this.setState({ expanded: true });
+    } else {
+      this.setState({ expanded: false });
+    }
+  };
 
   render() {
     return (
-      <div className="App">
+      <div>
         <Header />
-        <main>
-          <JobDetails jobData={this.state.data} />
-          <InputForm showPreview={(event) => this.onInputChange(event)} currentValue={this.state.currentValue} submitHandler=/>
-
-          <Preview />
-        </main>
+        <h4>{this.state.error}</h4>
+        <InputForm
+          handleSubmit={this.handleSubmit}
+          listings={this.state.listings}
+          expand={this.expand}
+          expanded={this.state.expanded}
+          previewText={this.state.previewText}
+        />
+        <Preview
+          listings={this.state.listings}
+          expand={this.expand}
+          expanded={this.state.expanded}
+          previewText={this.state.previewText}
+        />
+        <Listings listings={this.state.listings} />
         <Footer />
       </div>
     );
   }
 }
-
-
-
-
-
 
 export default App;
